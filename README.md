@@ -43,6 +43,20 @@ npm run lint         # Run ESLint
 npm run format       # Format source files
 ```
 
+## MongoDB setup
+
+Create a local environment file from the committed example:
+
+```bash
+Copy-Item .env.example .env
+```
+
+Set `MONGODB_URI` in `.env` to a local MongoDB or MongoDB Atlas connection string. The server establishes the database connection before it starts listening for requests.
+
+For integration tests, the project uses `mongodb-memory-server`. Tests use an isolated temporary MongoDB instance and do not connect to Atlas.
+
+The database connection is managed by `src/config/database.ts`. It reuses an existing connection and closes the connection during graceful server shutdown.
+
 ## API
 
 The API is versioned under `/api/v1`.

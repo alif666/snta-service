@@ -10,5 +10,6 @@ if (Number.isNaN(port)) {
 
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? "development",
-  port
+  port,
+  mongodbUri: process.env.MONGODB_URI
 } as const;
