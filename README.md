@@ -76,6 +76,31 @@ Successful response:
 }
 ```
 
+### Authentication
+
+The authentication endpoints are:
+
+```text
+POST /api/v1/auth/register
+POST /api/v1/auth/login
+GET  /api/v1/auth/me
+```
+
+Set these values in `.env`:
+
+```env
+JWT_SECRET=use-a-long-random-secret
+JWT_EXPIRES_IN=1d
+```
+
+After login, send the returned token using:
+
+```text
+Authorization: Bearer <access-token>
+```
+
+The API never returns or stores plain-text passwords. Passwords are hashed with bcrypt before persistence.
+
 ## Testing with Postman
 
 The Postman collection is available at:
@@ -91,5 +116,3 @@ The collection will be updated incrementally as new endpoints are implemented.
 ## Project structure
 
 The backend follows a feature-driven structure. Feature-specific routes, controllers, services, repositories, models, validation, and types will live together under `src/modules`. Shared infrastructure belongs under `src/shared`.
-
-### codex resume 01a12376-6e8a-75c3-ac09-b294dea5b64a

@@ -18,5 +18,13 @@ export const env = {
 
   get mongodbUri() {
     return process.env.MONGODB_URI;
+  },
+
+  get jwtSecret() {
+    return process.env.JWT_SECRET;
+  },
+
+  get jwtExpiresIn() {
+    return process.env.JWT_EXPIRES_IN ?? "1d";
   }
 } as const;
