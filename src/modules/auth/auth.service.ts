@@ -1,22 +1,14 @@
-import type { UserDocument } from "@/modules/users/user.types";
 import type {
   LoginInput,
   PublicUser,
   RegisterInput
 } from "@/modules/auth/auth.types";
 import { createUser, findUserByEmail } from "@/modules/users/user.repository";
+import { toPublicUser } from "@/modules/users/user.service";
 import { AppError } from "@/shared/errors/app-error";
 import bcrypt from "bcryptjs";
 import { env } from "@/config/env";
 import jwt, { type SignOptions } from "jsonwebtoken";
-
-export const toPublicUser = (user: UserDocument): PublicUser => ({
-  email: user.email,
-  id: user._id.toString(),
-  interests: user.interests,
-  name: user.name,
-  role: user.role
-});
 
 export const loginUser = async (
   input: LoginInput

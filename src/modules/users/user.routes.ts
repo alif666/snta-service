@@ -1,0 +1,20 @@
+import { Router } from "express";
+import { authenticate } from "@/modules/auth/auth.middleware";
+import { authorizeRoles } from "@/modules/auth/authorize.middleware";
+import {
+  createAdminUser,
+  deleteUser,
+  getUser,
+  listUsers,
+  updateUser
+} from "@/modules/users/user.controller";
+
+const userRouter = Router();
+
+userRouter.get("/", authenticate, authorizeRoles("admin"), listUsers);
+userRouter.get("/:id", authenticate, authorizeRoles("admin"), getUser);
+userRouter.patch("/:id", authenticate, authorizeRoles("admin"), updateUser);
+userRouter.delete("/:id", authenticate, authorizeRoles("admin"), deleteUser);
+userRouter.post("/", authenticate, authorizeRoles("admin"), createAdminUser);
+
+export { userRouter };

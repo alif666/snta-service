@@ -101,6 +101,36 @@ Authorization: Bearer <access-token>
 
 The API never returns or stores plain-text passwords. Passwords are hashed with bcrypt before persistence.
 
+### User management
+
+User-management endpoints require an authenticated administrator token:
+
+```text
+GET    /api/v1/users?page=1&limit=20
+GET    /api/v1/users/:id
+POST   /api/v1/users
+PATCH  /api/v1/users/:id
+DELETE /api/v1/users/:id
+```
+
+The list endpoint returns pagination metadata and sorts users by newest first. User responses never include `password` or `passwordHash`.
+
+The admin create endpoint accepts `name`, `email`, `password`, `role`, and optional `interests`. Public registration always creates a regular user; only an administrator can assign the `admin` role.
+
+Example admin create request:
+
+```json
+{
+  "name": "New User",
+  "email": "new-user@example.com",
+  "password": "StrongPassword123",
+  "role": "user",
+  "interests": ["technology"]
+}
+```
+
+To use these endpoints in Postman, set the collection's `accessToken` variable to a valid administrator JWT and `userId` to a target user ID.
+
 ## Testing with Postman
 
 The Postman collection is available at:
@@ -111,7 +141,7 @@ docs/postman/snta-service.postman_collection.json
 
 Import the collection into Postman and update the `baseUrl` collection variable when the API is deployed.
 
-The collection will be updated incrementally as new endpoints are implemented.
+The collection includes health, authentication, and administrator user-management requests.
 
 ## Project structure
 

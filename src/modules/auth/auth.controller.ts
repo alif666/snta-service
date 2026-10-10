@@ -3,13 +3,10 @@ import {
   validateLoginInput,
   validateRegisterInput
 } from "@/modules/auth/auth.validation";
-import {
-  loginUser,
-  registerUser,
-  toPublicUser
-} from "@/modules/auth/auth.service";
+import { loginUser, registerUser } from "@/modules/auth/auth.service";
 import type { AuthenticatedRequest } from "@/modules/auth/auth.types";
 import { findUserById } from "@/modules/users/user.repository";
+import { toPublicUser } from "@/modules/users/user.service";
 import { AppError } from "@/shared/errors/app-error";
 
 export const login = async (
