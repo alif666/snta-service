@@ -4,6 +4,7 @@ import { authorizeRoles } from "@/modules/auth/authorize.middleware";
 import {
   createAdminUser,
   deleteUser,
+  findAggregateUsersByInterestForAdmin,
   getUser,
   listUsers,
   updateUser
@@ -12,6 +13,12 @@ import {
 const userRouter = Router();
 
 userRouter.get("/", authenticate, authorizeRoles("admin"), listUsers);
+userRouter.get(
+  "/analytics/interests",
+  authenticate,
+  authorizeRoles("admin"),
+  findAggregateUsersByInterestForAdmin
+);
 userRouter.get("/:id", authenticate, authorizeRoles("admin"), getUser);
 userRouter.patch("/:id", authenticate, authorizeRoles("admin"), updateUser);
 userRouter.delete("/:id", authenticate, authorizeRoles("admin"), deleteUser);

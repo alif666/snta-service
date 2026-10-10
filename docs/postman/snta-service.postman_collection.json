@@ -305,6 +305,24 @@
           "response": []
         },
         {
+          "name": "User interest analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/analytics/interests",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "analytics", "interests"]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get user",
           "request": {
             "method": "GET",

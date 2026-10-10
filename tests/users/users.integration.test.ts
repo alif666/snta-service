@@ -141,6 +141,117 @@ describe("GET /api/v1/users", () => {
   });
 });
 
+describe("GET /api/v1/users/analytics/interests", () => {
+  it("rejects unauthenticated requests", async () => {
+    const response = await request(app).get(
+      "/api/v1/users/analytics/interests"
+    );
+
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({
+      success: false,
+      message: "Authentication required"
+    });
+  });
+
+  it("rejects authenticated non-admin users", async () => {
+    const accessToken = await registerAndLoginUser();
+
+    const response = await request(app)
+      .get("/api/v1/users/analytics/interests")
+      .set("Authorization", `Bearer ${accessToken}`);
+
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({
+      success: false,
+      message: "Forbidden"
+    });
+  });
+
+  it("groups users by interest for an admin", async () => {
+    const users = [
+      {
+        ...normalUser,
+        email: "interest-first@example.com",
+        interests: ["reading", "technology"]
+      },
+      {
+        ...normalUser,
+        name: "Interest Second User",
+        email: "interest-second@example.com",
+        interests: ["technology", "sports"]
+      },
+      {
+        ...normalUser,
+        name: "Interest Third User",
+        email: "interest-third@example.com",
+        interests: ["reading"]
+      }
+    ];
+
+    for (const user of users) {
+      const registrationResponse = await request(app)
+        .post("/api/v1/auth/register")
+        .send(user);
+
+      expect(registrationResponse.status).toBe(201);
+    }
+
+    const response = await request(app)
+      .get("/api/v1/users/analytics/interests")
+      .set("Authorization", `Bearer ${createAdminToken()}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.data.interests).toEqual(
+      expect.arrayContaining([
+        { interest: "reading", userCount: 2 },
+        { interest: "technology", userCount: 2 },
+        { interest: "sports", userCount: 1 }
+      ])
+    );
+
+    expect(response.body.data.interests[0]).toEqual({
+      interest: expect.any(String),
+      userCount: 2
+    });
+  });
+
+  it("counts a user only once when an interest is duplicated", async () => {
+    const users = [
+      {
+        ...normalUser,
+        email: "duplicate-interest-first@example.com",
+        interests: ["technology", "technology"]
+      },
+      {
+        ...normalUser,
+        name: "Duplicate Interest Second User",
+        email: "duplicate-interest-second@example.com",
+        interests: ["technology"]
+      }
+    ];
+
+    for (const user of users) {
+      const registrationResponse = await request(app)
+        .post("/api/v1/auth/register")
+        .send(user);
+
+      expect(registrationResponse.status).toBe(201);
+    }
+
+    const response = await request(app)
+      .get("/api/v1/users/analytics/interests")
+      .set("Authorization", `Bearer ${createAdminToken()}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.interests).toContainEqual({
+      interest: "technology",
+      userCount: 2
+    });
+  });
+});
+
 describe("GET /api/v1/users/:id", () => {
   it("allows an admin to retrieve a user without password data", async () => {
     const registrationResponse = await request(app)

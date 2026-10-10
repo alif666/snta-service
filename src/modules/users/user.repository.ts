@@ -1,5 +1,6 @@
 import type {
   CreateUserInput,
+  InterestAggregation,
   ListUsersOptions,
   ListUsersResult,
   UpdateUserInput,
@@ -63,4 +64,41 @@ export const findUsers = async ({
     users,
     total
   };
+};
+
+export const aggregateUsersByInterest = async (): Promise<
+  InterestAggregation[]
+> => {
+  return User.aggregate([
+    {
+      $unwind: "$interests"
+    },
+    {
+      $group: {
+        _id: {
+          interest: "$interests",
+          userId: "$_id"
+        }
+      }
+    },
+    {
+      $group: {
+        _id: "$_id.interest",
+        userCount: { $sum: 1 }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        interest: "$_id",
+        userCount: 1
+      }
+    },
+    {
+      $sort: {
+        userCount: -1,
+        interest: 1
+      }
+    }
+  ]);
 };

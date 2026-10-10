@@ -36,3 +36,8 @@ export interface UpdateUserInput {
   role?: UserRole;
   interests?: string[];
 }
+
+export interface InterestAggregation {
+  interest: string;
+  userCount: number;
+}

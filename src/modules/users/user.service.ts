@@ -1,10 +1,16 @@
 import bcrypt from "bcryptjs";
 
 import type { PublicUser } from "@/modules/auth/auth.types";
-import { createUser, findUserByEmail } from "@/modules/users/user.repository";
+import {
+  aggregateUsersByInterest,
+  createUser,
+  findUserByEmail
+} from "@/modules/users/user.repository";
 import type {
   AdminCreateUserInput,
-  UserDocument
+  InterestAggregation,
+  UserDocument,
+  UserRole
 } from "@/modules/users/user.types";
 import { AppError } from "@/shared/errors/app-error";
 
@@ -36,4 +42,15 @@ export const createAdminUser = async (
   });
 
   return toPublicUser(user);
+};
+
+export const aggregateUsersByInterestForAdmin = async (
+  role: UserRole
+): Promise<InterestAggregation[]> => {
+  if (role !== "admin") {
+    throw new AppError(403, "User not authorized");
+  }
+
+  const result = await aggregateUsersByInterest();
+  return result;
 };

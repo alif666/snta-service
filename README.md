@@ -111,6 +111,7 @@ GET    /api/v1/users/:id
 POST   /api/v1/users
 PATCH  /api/v1/users/:id
 DELETE /api/v1/users/:id
+GET    /api/v1/users/analytics/interests
 ```
 
 The list endpoint returns pagination metadata and sorts users by newest first. User responses never include `password` or `passwordHash`.
@@ -130,6 +131,24 @@ Example admin create request:
 ```
 
 To use these endpoints in Postman, set the collection's `accessToken` variable to a valid administrator JWT and `userId` to a target user ID.
+
+The interest analytics endpoint groups users by each interest, counts unique users, and sorts the results by count in descending order.
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "interests": [
+      {
+        "interest": "technology",
+        "userCount": 2
+      }
+    ]
+  }
+}
+```
 
 ### Notes
 

@@ -6,6 +6,7 @@ import {
   findUserByIdAndDelete
 } from "@/modules/users/user.repository";
 import {
+  aggregateUsersByInterestForAdmin,
   createAdminUser as createAdminUserService,
   toPublicUser
 } from "@/modules/users/user.service";
@@ -14,6 +15,7 @@ import {
   validateAdminCreateUserInput,
   validateUpdateUserInput
 } from "@/modules/users/user.validation";
+import type { AuthenticatedRequest } from "@/modules/auth/auth.types";
 
 export const listUsers: RequestHandler = async (
   request,
@@ -134,6 +136,27 @@ export const createAdminUser: RequestHandler = async (
       message: "User created successfully",
       data: {
         user: adminUser
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const findAggregateUsersByInterestForAdmin: RequestHandler = async (
+  request,
+  response,
+  next
+): Promise<void> => {
+  try {
+    const authenticatedRequest = request as AuthenticatedRequest;
+    const role = authenticatedRequest.user.role;
+    const result = await aggregateUsersByInterestForAdmin(role);
+
+    response.status(200).json({
+      success: true,
+      data: {
+        interests: result
       }
     });
   } catch (error) {
