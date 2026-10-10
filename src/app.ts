@@ -2,9 +2,9 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 
-import { errorHandler } from "./shared/middleware/error.middleware";
-import { notFoundHandler } from "./shared/middleware/not-found.middleware";
-import { healthRouter } from "./modules/health/health.routes";
+import { healthRouter } from "@/modules/health/health.routes";
+import { errorHandler } from "@/shared/middleware/error.middleware";
+import { notFoundHandler } from "@/shared/middleware/not-found.middleware";
 
 const app = express();
 

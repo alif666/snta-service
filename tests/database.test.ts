@@ -16,7 +16,7 @@ beforeAll(async () => {
   });
   process.env.MONGODB_URI = mongoServer.getUri();
 
-  database = await import("../src/config/database.js");
+  database = await import("@/config/database.js");
 
   await database.connectDatabase();
 }, 120_000);

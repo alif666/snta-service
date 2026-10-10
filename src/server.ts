@@ -1,6 +1,6 @@
-import { app } from "./app";
-import { connectDatabase, disconnectDatabase } from "./config/database";
-import { env } from "./config/env";
+import { app } from "@/app";
+import { connectDatabase, disconnectDatabase } from "@/config/database";
+import { env } from "@/config/env";
 
 const startServer = async (): Promise<void> => {
   await connectDatabase();

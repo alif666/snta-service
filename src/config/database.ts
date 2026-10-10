@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { env } from "./env";
+import { env } from "@/config/env";
 
 let connectionPromise: Promise<typeof mongoose> | null = null;
 

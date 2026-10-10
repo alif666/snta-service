@@ -91,3 +91,5 @@ The collection will be updated incrementally as new endpoints are implemented.
 ## Project structure
 
 The backend follows a feature-driven structure. Feature-specific routes, controllers, services, repositories, models, validation, and types will live together under `src/modules`. Shared infrastructure belongs under `src/shared`.
+
+### codex resume 01a12376-6e8a-75c3-ac09-b294dea5b64a
