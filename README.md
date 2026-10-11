@@ -150,15 +150,21 @@ Example response:
 }
 ```
 
-### User posts lookup
+### Posts
 
-Administrators can retrieve a user's posts with joined author information:
+Posts are publicly readable. Authenticated users can create posts and manage
+their own posts. Administrators can manage any post.
 
 ```text
+POST   /api/v1/posts
+GET    /api/v1/posts?page=1&limit=20
+GET    /api/v1/posts/:id
+PATCH  /api/v1/posts/:id
+DELETE /api/v1/posts/:id
 GET /api/v1/users/:id/posts?page=1&limit=20
 ```
 
-The endpoint uses a MongoDB aggregation with `$lookup`, returns paginated results sorted by newest first, and exposes only the author's `id`, `name`, and `email`.
+The user-post lookup uses a MongoDB aggregation with `$lookup`, returns paginated results sorted by newest first, and exposes only the author's `id`, `name`, and `email`.
 
 ### Notes
 

@@ -7,7 +7,7 @@ export interface ListPostOptions {
 }
 
 export interface ListPostResult {
-  posts: PostDocument[];
+  posts: PublicPost[];
   total: number;
 }
 

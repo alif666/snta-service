@@ -9,7 +9,7 @@ import {
   listUsers,
   updateUser
 } from "@/modules/users/user.controller";
-import { listPostForUser } from "@/modules/posts/post.controller";
+import { listPostsForUser } from "@/modules/posts/post.controller";
 
 const userRouter = Router();
 
@@ -20,12 +20,7 @@ userRouter.get(
   authorizeRoles("admin"),
   findAggregateUsersByInterestForAdmin
 );
-userRouter.get(
-  "/:id/posts",
-  authenticate,
-  authorizeRoles("admin"),
-  listPostForUser
-);
+userRouter.get("/:id/posts", listPostsForUser);
 userRouter.get("/:id", authenticate, authorizeRoles("admin"), getUser);
 userRouter.patch("/:id", authenticate, authorizeRoles("admin"), updateUser);
 userRouter.delete("/:id", authenticate, authorizeRoles("admin"), deleteUser);
