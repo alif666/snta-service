@@ -150,6 +150,16 @@ Example response:
 }
 ```
 
+### User posts lookup
+
+Administrators can retrieve a user's posts with joined author information:
+
+```text
+GET /api/v1/users/:id/posts?page=1&limit=20
+```
+
+The endpoint uses a MongoDB aggregation with `$lookup`, returns paginated results sorted by newest first, and exposes only the author's `id`, `name`, and `email`.
+
 ### Notes
 
 Authenticated users can create, list, view, update, and delete their own notes. Administrators can list and view notes from all users, while update and delete operations remain ownership-protected.
