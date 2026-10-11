@@ -44,7 +44,7 @@ export const listUsers: RequestHandler = async (
     response.status(200).json({
       success: true,
       data: {
-        users: result.users,
+        users: result.users.map(toPublicUser),
         pagination: {
           page,
           limit,
