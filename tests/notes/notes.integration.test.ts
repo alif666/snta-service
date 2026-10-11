@@ -4,7 +4,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import { Types } from "mongoose";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { app } from "@/app";
+import { app } from "@/express-app";
 import { connectDatabase, disconnectDatabase } from "@/config/database.js";
 import { Note } from "@/modules/notes/note.model.js";
 import { User } from "@/modules/users/user.model.js";

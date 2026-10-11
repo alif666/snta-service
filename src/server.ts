@@ -1,4 +1,6 @@
-import { app } from "@/app";
+import "./config/runtime-alias";
+
+import { app } from "@/express-app";
 import { connectDatabase, disconnectDatabase } from "@/config/database";
 import { env } from "@/config/env";
 

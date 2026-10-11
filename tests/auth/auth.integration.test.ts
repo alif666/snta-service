@@ -3,7 +3,7 @@ import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { app } from "@/app";
+import { app } from "@/express-app";
 import { connectDatabase, disconnectDatabase } from "@/config/database.js";
 import { User } from "@/modules/users/user.model.js";
 

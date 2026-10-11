@@ -1,7 +1,7 @@
 import request from "supertest";
 import { describe, expect, it } from "vitest";
 
-import { app } from "@/app";
+import { app } from "@/express-app";
 
 describe("Unknown routes", () => {
   it("returns a consistent 404 response", async () => {

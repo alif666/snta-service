@@ -1,7 +1,7 @@
 import request from "supertest";
 import { describe, expect, it } from "vitest";
 
-import { app } from "@/app";
+import { app } from "@/express-app";
 
 describe("GET /api/v1/health", () => {
   it("returns a successful health response", async () => {
