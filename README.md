@@ -235,4 +235,10 @@ The collection includes health, authentication, note, administrator user-managem
 
 The backend follows a feature-driven structure. Feature-specific routes, controllers, services, repositories, models, validation, and types will live together under `src/modules`. Shared infrastructure belongs under `src/shared`.
 
+## Vercel deployment
+
+Vercel runs the build command from `package.json` and uses the root `server.js`
+entrypoint. That entrypoint loads the alias-rewritten files from `dist` and
+establishes the MongoDB connection before forwarding requests to Express.
+
 ### codex resume 01a12376-6e8a-75c3-ac09-b294dea5b64a
