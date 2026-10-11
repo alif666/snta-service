@@ -1,4 +1,4 @@
-import "module-alias/register";
+import "./config/runtime-alias";
 
 import cors from "cors";
 import express from "express";

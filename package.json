@@ -23,9 +23,6 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "_moduleAliases": {
-    "@": "dist"
-  },
   "bugs": {
     "url": "https://github.com/alif666/snta-service/issues"
   },
@@ -45,6 +42,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/module-alias": "^2.0.4",
     "@types/node": "^26.6.5",
     "@types/supertest": "^7.2.1",
     "eslint": "^10.12.0",
