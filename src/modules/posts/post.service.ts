@@ -1,6 +1,5 @@
 import { Types } from "mongoose";
 
-import { findUserById } from "@/modules/users/user.repository";
 import {
   createPost,
   findPostById,
@@ -14,6 +13,7 @@ import type {
   UpdatePostInput
 } from "@/modules/posts/post.types";
 import { AppError } from "@/shared/errors/app-error";
+import { findUserById } from "@/modules/users/user.repository";
 import type { UserRole } from "@/modules/users/user.types";
 
 export const createUserPost = async (
@@ -43,12 +43,6 @@ export const listPosts = async (
   authorId: string
 ): Promise<{ posts: PublicPost[]; total: number }> => {
   const author = toUserObjectId(authorId);
-  const targetUser = await findUserById(authorId);
-
-  if (!targetUser) {
-    throw new AppError(404, "User not found");
-  }
-
   return findPosts({ page, limit, author });
 };
 

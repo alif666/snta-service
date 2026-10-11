@@ -463,9 +463,13 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/users/analytics/interests",
+              "raw": "{{baseUrl}}/users/analytics/interests?page=1&limit=20",
               "host": ["{{baseUrl}}"],
-              "path": ["users", "analytics", "interests"]
+              "path": ["users", "analytics", "interests"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
             }
           },
           "response": []

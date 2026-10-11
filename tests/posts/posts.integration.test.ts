@@ -291,15 +291,23 @@ describe("GET /api/v1/users/:id/posts", () => {
     });
   });
 
-  it("returns 404 when the target user does not exist", async () => {
+  it("returns an empty paginated result when the target user has no posts", async () => {
     const response = await request(app).get(
       `/api/v1/users/${new Types.ObjectId().toString()}/posts`
     );
 
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      success: false,
-      message: "User not found"
+      success: true,
+      data: {
+        posts: [],
+        pagination: {
+          page: 1,
+          limit: 20,
+          total: 0,
+          totalPages: 0
+        }
+      }
     });
   });
 });

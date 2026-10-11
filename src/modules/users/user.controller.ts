@@ -151,12 +151,32 @@ export const findAggregateUsersByInterestForAdmin: RequestHandler = async (
   try {
     const authenticatedRequest = request as AuthenticatedRequest;
     const role = authenticatedRequest.user.role;
-    const result = await aggregateUsersByInterestForAdmin(role);
+    const page = Number(request.query.page ?? 1);
+    const limit = Number(request.query.limit ?? 20);
+
+    if (
+      !Number.isInteger(page) ||
+      page < 1 ||
+      !Number.isInteger(limit) ||
+      limit < 1 ||
+      limit > 100
+    ) {
+      next(new AppError(400, "Invalid pagination parameters"));
+      return;
+    }
+
+    const result = await aggregateUsersByInterestForAdmin(role, page, limit);
 
     response.status(200).json({
       success: true,
       data: {
-        interests: result
+        interests: result.interests,
+        pagination: {
+          page,
+          limit,
+          total: result.total,
+          totalPages: result.total === 0 ? 0 : Math.ceil(result.total / limit)
+        }
       }
     });
   } catch (error) {

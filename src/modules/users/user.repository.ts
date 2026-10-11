@@ -1,6 +1,7 @@
 import type {
   CreateUserInput,
-  InterestAggregation,
+  InterestAggregationOptions,
+  InterestAggregationResult,
   ListUsersOptions,
   ListUsersResult,
   UpdateUserInput,
@@ -54,7 +55,7 @@ export const findUsers = async ({
   const [users, total] = await Promise.all([
     User.find()
       .select("-passwordHash")
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: -1 })
       .skip(skip)
       .limit(limit)
       .exec(),
@@ -66,39 +67,72 @@ export const findUsers = async ({
   };
 };
 
-export const aggregateUsersByInterest = async (): Promise<
-  InterestAggregation[]
-> => {
-  return User.aggregate([
+export const aggregateUsersByInterest = async ({
+  page,
+  limit
+}: InterestAggregationOptions): Promise<InterestAggregationResult> => {
+  const skip = (page - 1) * limit;
+  const [result] = await User.aggregate([
     {
       $unwind: "$interests"
+    },
+    {
+      $sort: {
+        interests: 1,
+        name: 1,
+        _id: 1
+      }
     },
     {
       $group: {
         _id: {
           interest: "$interests",
           userId: "$_id"
+        },
+        user: {
+          $first: {
+            id: { $toString: "$_id" },
+            name: "$name",
+            email: "$email",
+            role: "$role"
+          }
         }
       }
     },
     {
       $group: {
         _id: "$_id.interest",
-        userCount: { $sum: 1 }
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        interest: "$_id",
-        userCount: 1
+        userCount: { $sum: 1 },
+        users: { $push: "$user" }
       }
     },
     {
       $sort: {
         userCount: -1,
-        interest: 1
+        _id: 1
+      }
+    },
+    {
+      $facet: {
+        interests: [
+          { $skip: skip },
+          { $limit: limit },
+          {
+            $project: {
+              _id: 0,
+              interest: "$_id",
+              userCount: 1,
+              users: 1
+            }
+          }
+        ],
+        metadata: [{ $count: "total" }]
       }
     }
   ]);
+
+  return {
+    interests: result?.interests ?? [],
+    total: result?.metadata[0]?.total ?? 0
+  };
 };

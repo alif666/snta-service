@@ -154,7 +154,7 @@ Example admin create request:
 
 To use these endpoints in Postman, set the collection's `accessToken` variable to a valid administrator JWT and `userId` to a target user ID.
 
-The interest analytics endpoint groups users by each interest, counts unique users, and sorts the results by count in descending order.
+The interest analytics endpoint groups users by each interest, counts unique users, includes the users in each group, and supports pagination. A user with multiple interests appears in every applicable group. Duplicate interest values on one user are counted only once.
 
 Example response:
 
@@ -165,12 +165,37 @@ Example response:
     "interests": [
       {
         "interest": "technology",
-        "userCount": 2
+        "userCount": 2,
+        "users": [
+          {
+            "id": "user-id",
+            "name": "Example User",
+            "email": "example@example.com",
+            "role": "user"
+          }
+        ]
       }
-    ]
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 1,
+      "totalPages": 1
+    }
   }
 }
 ```
+
+### Index strategy
+
+The schemas define only indexes used by required filters and list ordering:
+
+- `User.email` unique ascending index supports case-normalized login lookup and prevents duplicate accounts.
+- `User.createdAt` descending index supports the administrator directory's newest-first list. The query uses `_id` only as a deterministic tie-breaker.
+- `Note.author + createdAt` descending compound index supports a user's own-note list; `Note.createdAt` descending index supports the administrator's all-notes list. The query uses `_id` only as a deterministic tie-breaker.
+- `Post.author + createdAt` descending compound index supports the selected-user post lookup; `Post.createdAt` descending index supports the public post list. The aggregation matches and sorts before `$lookup` so these indexes can support the post scan.
+
+MongoDB's built-in `_id` indexes support individual user, note, and post retrieval; no redundant custom `_id` indexes are defined.
 
 ### Posts
 

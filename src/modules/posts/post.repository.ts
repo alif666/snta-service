@@ -40,21 +40,21 @@ export const findPosts = async ({
 
   const [result] = await Post.aggregate([
     { $match: match },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "author"
-      }
-    },
-    { $unwind: "$author" },
+    { $sort: { createdAt: -1, _id: -1 } },
     {
       $facet: {
         posts: [
-          { $sort: { createdAt: -1 } },
           { $skip: skip },
           { $limit: limit },
+          {
+            $lookup: {
+              from: "users",
+              localField: "author",
+              foreignField: "_id",
+              as: "author"
+            }
+          },
+          { $unwind: "$author" },
           { $project: publicPostProjection }
         ],
         metadata: [{ $count: "total" }]

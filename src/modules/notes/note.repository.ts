@@ -21,7 +21,11 @@ export const findNotes = async ({
   const filter = author ? { author } : {};
   const skip = (page - 1) * limit;
   const [notes, total] = await Promise.all([
-    Note.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).exec(),
+    Note.find(filter)
+      .sort({ createdAt: -1, _id: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec(),
     Note.countDocuments(filter).exec()
   ]);
   return {

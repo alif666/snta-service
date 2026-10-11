@@ -37,7 +37,25 @@ export interface UpdateUserInput {
   interests?: string[];
 }
 
+export interface InterestUser {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+}
+
 export interface InterestAggregation {
   interest: string;
   userCount: number;
+  users: InterestUser[];
+}
+
+export interface InterestAggregationOptions {
+  page: number;
+  limit: number;
+}
+
+export interface InterestAggregationResult {
+  interests: InterestAggregation[];
+  total: number;
 }

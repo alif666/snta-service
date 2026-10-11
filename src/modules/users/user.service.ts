@@ -8,7 +8,7 @@ import {
 } from "@/modules/users/user.repository";
 import type {
   AdminCreateUserInput,
-  InterestAggregation,
+  InterestAggregationResult,
   UserDocument,
   UserRole
 } from "@/modules/users/user.types";
@@ -45,12 +45,14 @@ export const createAdminUser = async (
 };
 
 export const aggregateUsersByInterestForAdmin = async (
-  role: UserRole
-): Promise<InterestAggregation[]> => {
+  role: UserRole,
+  page: number,
+  limit: number
+): Promise<InterestAggregationResult> => {
   if (role !== "admin") {
     throw new AppError(403, "User not authorized");
   }
 
-  const result = await aggregateUsersByInterest();
+  const result = await aggregateUsersByInterest({ page, limit });
   return result;
 };

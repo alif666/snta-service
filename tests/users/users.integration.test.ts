@@ -2,7 +2,15 @@ import jwt from "jsonwebtoken";
 import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { Types } from "mongoose";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+} from "vitest";
 
 import { app } from "@/express-app";
 import { connectDatabase, disconnectDatabase } from "@/config/database.js";
@@ -197,6 +205,7 @@ describe("GET /api/v1/users/analytics/interests", () => {
       expect(registrationResponse.status).toBe(201);
     }
 
+    const aggregateSpy = vi.spyOn(User, "aggregate");
     const response = await request(app)
       .get("/api/v1/users/analytics/interests")
       .set("Authorization", `Bearer ${createAdminToken()}`);
@@ -205,16 +214,32 @@ describe("GET /api/v1/users/analytics/interests", () => {
     expect(response.body.success).toBe(true);
     expect(response.body.data.interests).toEqual(
       expect.arrayContaining([
-        { interest: "reading", userCount: 2 },
-        { interest: "technology", userCount: 2 },
-        { interest: "sports", userCount: 1 }
+        expect.objectContaining({ interest: "reading", userCount: 2 }),
+        expect.objectContaining({ interest: "technology", userCount: 2 }),
+        expect.objectContaining({ interest: "sports", userCount: 1 })
       ])
     );
 
     expect(response.body.data.interests[0]).toEqual({
       interest: expect.any(String),
-      userCount: 2
+      userCount: 2,
+      users: expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          email: expect.any(String),
+          role: "user"
+        })
+      ])
     });
+    expect(response.body.data.pagination).toEqual({
+      page: 1,
+      limit: 20,
+      total: 3,
+      totalPages: 1
+    });
+    expect(aggregateSpy).toHaveBeenCalledTimes(1);
+    aggregateSpy.mockRestore();
   });
 
   it("counts a user only once when an interest is duplicated", async () => {
@@ -245,9 +270,31 @@ describe("GET /api/v1/users/analytics/interests", () => {
       .set("Authorization", `Bearer ${createAdminToken()}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.data.interests).toContainEqual({
-      interest: "technology",
-      userCount: 2
+    expect(response.body.data.interests).toContainEqual(
+      expect.objectContaining({
+        interest: "technology",
+        userCount: 2,
+        users: expect.arrayContaining([
+          expect.objectContaining({
+            email: "duplicate-interest-first@example.com"
+          }),
+          expect.objectContaining({
+            email: "duplicate-interest-second@example.com"
+          })
+        ])
+      })
+    );
+  });
+
+  it("paginates interest groups and rejects invalid pagination", async () => {
+    const response = await request(app)
+      .get("/api/v1/users/analytics/interests?page=0&limit=20")
+      .set("Authorization", `Bearer ${createAdminToken()}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      success: false,
+      message: "Invalid pagination parameters"
     });
   });
 });
