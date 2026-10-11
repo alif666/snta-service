@@ -8,6 +8,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
+    "seed:demo": "tsx src/scripts/seed-demo.ts",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.test.json --noEmit",
     "format": "prettier --write .",

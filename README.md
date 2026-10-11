@@ -57,6 +57,28 @@ For integration tests, the project uses `mongodb-memory-server`. Tests use an is
 
 The database connection is managed by `src/config/database.ts`. It reuses an existing connection and closes the connection during graceful server shutdown.
 
+### Demo production data
+
+The repository includes a guarded, idempotent demo seed command. It creates a demo admin, demo member, notes, and public posts without deleting existing records.
+
+Set these values in the deployment environment or a temporary local shell session:
+
+```env
+SEED_CONFIRM=seed-demo
+SEED_ADMIN_EMAIL=demo-admin@example.com
+SEED_ADMIN_PASSWORD=use-a-strong-demo-password
+SEED_USER_EMAIL=demo-writer@example.com
+SEED_USER_PASSWORD=use-a-strong-demo-password
+```
+
+Then run the command from the backend repository while `MONGODB_URI` points to the intended Atlas database:
+
+```bash
+npm run seed:demo
+```
+
+Remove the seed variables after the command succeeds. The command is not part of the Vercel runtime startup process.
+
 ## API
 
 The API is versioned under `/api/v1`.
