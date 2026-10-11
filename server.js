@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /* global require, module, console */
 
+require("express");
+
 const { app } = require("./dist/express-app.js");
 const { connectDatabase } = require("./dist/config/database.js");
 
